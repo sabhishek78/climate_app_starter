@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+
 
 class LocationScreen extends StatefulWidget {
+Map jsonData;
+LocationScreen({this.jsonData});
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
@@ -8,6 +12,7 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   @override
   Widget build(BuildContext context) {
+    widget.jsonData;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -29,7 +34,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 children: <Widget>[
                   FlatButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context); //go back
                     },
                     child: Icon(
                       Icons.near_me,

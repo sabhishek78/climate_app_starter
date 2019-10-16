@@ -1,5 +1,8 @@
 import 'package:clima/location_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 
 class CityScreen extends StatefulWidget {
   @override
@@ -7,6 +10,28 @@ class CityScreen extends StatefulWidget {
 }
 
 class _CityScreenState extends State<CityScreen> {
+
+  void getLocation() async{
+    print('Get Location called');
+    Position position =await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    print(position.latitude);
+    print(position.longitude);
+  }
+
+  Future<Map> fetchWeatherInfo()async{
+    Map weatherMap;
+    Response response=await get('https://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=b6907d289e10d714a6e88b30761fae22');
+    if(response.statusCode==200){
+      print(response.body);
+        weatherMap=jsonDecode(response.body);
+      Map temperatureMap =weatherMap['main'];
+      double temperature =temperatureMap['temp_max'];
+      print(temperature-273.15);
+
+    }
+    return weatherMap;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,11 +61,14 @@ class _CityScreenState extends State<CityScreen> {
                 child: null,
               ),
               FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                      (context),
-                      MaterialPageRoute(
-                          builder: (context) => LocationScreen()));
+
+                onPressed: () async{
+                  getLocation();
+                  Map result=await fetchWeatherInfo();
+
+                  Navigator.push((context),
+                     MaterialPageRoute(
+                       builder: (context) => LocationScreen(jsonData: result,)));
                 },
                 child: Text(
                   'Get Weather',
