@@ -1,8 +1,11 @@
+import 'package:clima/loading_screen.dart';
 import 'package:clima/location_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
+
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class CityScreen extends StatefulWidget {
   @override
@@ -10,28 +13,14 @@ class CityScreen extends StatefulWidget {
 }
 
 class _CityScreenState extends State<CityScreen> {
-
-  void getLocation() async{
+  void getLocation() async {
     print('Get Location called');
-    Position position =await Geolocator()
+    Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     print(position.latitude);
     print(position.longitude);
   }
 
-  Future<Map> fetchWeatherInfo()async{
-    Map weatherMap;
-    Response response=await get('https://api.openweathermap.org/data/2.5/weather?lat=21.2379&lon=81.6337&appid=4f7b32dc58f4ac156caec77d106358f8');
-    if(response.statusCode==200){
-      print(response.body);
-        weatherMap=jsonDecode(response.body);
-      Map temperatureMap =weatherMap['main'];
-      double temperature =temperatureMap['temp_max'];
-      print(temperature-273.15);
-
-    }
-    return weatherMap;
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,14 +50,23 @@ class _CityScreenState extends State<CityScreen> {
                 child: null,
               ),
               FlatButton(
+                onPressed: () async {
+                  try {
+                    // Position postion =await getLocation();
 
-                onPressed: () async{
-                  getLocation();
-                  Map result=await fetchWeatherInfo();
+                    //Map result=await fetchWeatherInfo(position);
 
-                  Navigator.push((context),
-                     MaterialPageRoute(
-                       builder: (context) => LocationScreen(jsonData: result,)));
+                    Navigator.push(
+                        (context),
+                        MaterialPageRoute(
+                            builder: (context) => LoadingScreen()));
+                  } on Exception catch (e) {
+                    Alert(
+                            context: context,
+                            title: "network problem",
+                            desc: "Please try after some time")
+                        .show();
+                  }
                 },
                 child: Text(
                   'Get Weather',
