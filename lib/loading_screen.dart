@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'location.dart';
 class LoadingScreen extends StatefulWidget {
+  final String cityName;
+  LoadingScreen({this.cityName});
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
@@ -24,9 +26,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
     fetchWeatherData();
   }
   void fetchWeatherData() async {
-    print('https://api.openweathermap.org/data/2.5/weather?lat=${currentLocation.latitude}&lon=${currentLocation.longitude}&appid=4f7b32dc58f4ac156caec77d106358f8');
-    NetworkHelper helper = NetworkHelper('https://api.openweathermap.org/data/2.5/weather?lat=${currentLocation.latitude}&lon=${currentLocation.longitude}&appid=4f7b32dc58f4ac156caec77d106358f8');
+
+    NetworkHelper helper = NetworkHelper('https://api.openweathermap.org/data/2.5/weather?q=${widget.cityName}&appid=4f7b32dc58f4ac156caec77d106358f8');
+
+
+  /////////////////////////////////////////////
+   // print('https://api.openweathermap.org/data/2.5/weather?lat=${currentLocation.latitude}&lon=${currentLocation.longitude}&appid=4f7b32dc58f4ac156caec77d106358f8');
+  //  NetworkHelper helper = NetworkHelper('https://api.openweathermap.org/data/2.5/weather?lat=${currentLocation.latitude}&lon=${currentLocation.longitude}&appid=4f7b32dc58f4ac156caec77d106358f8');
     Map result= await helper.fetchWeatherInfo();
+    print(result);
     Navigator.push(
       context,
         MaterialPageRoute(

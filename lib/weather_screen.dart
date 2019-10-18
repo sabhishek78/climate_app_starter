@@ -20,7 +20,7 @@ class _CityScreenState extends State<CityScreen> {
     print(position.latitude);
     print(position.longitude);
   }
-
+String cityName;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,15 +35,20 @@ class _CityScreenState extends State<CityScreen> {
         child: SafeArea(
           child: Column(
             children: <Widget>[
-              Align(
-                alignment: Alignment.topLeft,
-                child: FlatButton(
-                  onPressed: () {},
-//                  child: Icon(
-//                    Icons.arrow_back_ios,
-//                    size: 50.0,
-//                  ),
-                ),
+              TextField(
+                onChanged: (text){
+                  cityName=text;
+                },
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blueAccent,
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    hintText: "EnterCity Name",
+
+                  )
               ),
               Container(
                 padding: EdgeInsets.all(20.0),
@@ -59,7 +64,7 @@ class _CityScreenState extends State<CityScreen> {
                     Navigator.push(
                         (context),
                         MaterialPageRoute(
-                            builder: (context) => LoadingScreen()));
+                            builder: (context) => LoadingScreen(cityName: cityName)));
                   } on Exception catch (e) {
                     Alert(
                             context: context,
